@@ -1,0 +1,11 @@
+# ProteinGym surrogate datasets. Select 4-6 matching MtrC:
+#   prokaryotic; cofactor/metalloprotein if possible; length > ~300;
+#   abundance/stability-type assay (not binding affinity).
+# Fill in BEFORE tagging filter_v1. Record N_eff/L of each next to MtrC's.
+surrogates: []
+  # - id: PLACEHOLDER_DMS_ID
+  #   uniprot: ""
+  #   length: 0
+  #   assay_type: abundance        # abundance | activity | binding
+  #   binarization: {method: two_sd_below_wt_mode}   # or published cutoff
+  #   neff_per_l: null

@@ -1,0 +1,79 @@
+# config/filter_v1.yaml
+# PRE-REGISTRATION: commit and tag (git tag filter-v1) BEFORE generating any candidate list.
+# Changing a threshold later => new file (filter_v2.yaml) + new tag; report both.
+
+target:
+  uniprot: Q8EG34
+  pdb: 4LM8
+  numbering: uniprot          # canonical key everywhere
+  score_range: [26, 671]      # mature chain (primary run)
+  precursor_sensitivity: true # also score 1-671, report per-site correlation (flag if < 0.95)
+
+esm:
+  checkpoints: [esm1v_1, esm1v_2, esm1v_3, esm1v_4, esm1v_5, esm2_650M]
+  scheme: masked_marginal
+  sign: negative_is_deleterious   # never flip
+  assert_no_clipping: true
+  max_len: 1022
+
+msa:
+  tool: jackhmmer
+  iterations: 5
+  incE: 1.0e-10
+  min_coverage: 0.70
+  max_col_gap_for_conservation: 0.30
+  seqid_weight_threshold: 0.80
+
+diagnostics:
+  null_n: 300
+  null_len_range: [600, 750]
+  null_source: uniref50
+  neff_per_l_distrust_below: 1.0
+
+structure:
+  rsa_scale: tien2013
+  exclude_waters: true
+  include_ca: true
+  rsa_variants: [holo, apo]
+  # MtrF domain I from 3PMQ is unreliable as deposited (3.2 A): use rebuilt model or exclude
+  exclude_regions:
+    MtrF: [domain_I]
+
+chem_mask:
+  cxxch_cys: hard_off
+  cxxch_his: hard_off
+  axial_distal_his: hard_off      # from Fe-N geometry, not annotation
+  axial_max_dist: 2.6             # A
+  heavy_atom_within_porphyrin: 4.0
+  expected_axial_per_heme: 2
+  ca_coordination: hard_off
+  signal_peptide: [1, 25]
+
+regression:
+  model: ols                      # move to gam only if residuals curve
+  distance_transform: exp         # exp(-d/lambda)
+  lambda_angstrom: 4.0
+  covariates: [rsa_holo, d_fe, d_porph, ss, domain]
+  inference: descriptive_only     # or spatial_block_bootstrap
+
+calibration:
+  surrogates_file: config/surrogates.yaml
+  fnr_ceiling: 0.15               # worst case across surrogates
+  pool: worst_case                # not mean
+  bootstrap_n: 10000
+  resample_unit: site             # not variant
+  dataset_level_bootstrap: true
+
+filter:
+  rule: max_llr_percentile
+  mechanism: second_shell_redox   # loop_grafting | second_shell_redox | interface | allosteric
+  second_shell_window_A: [5, 8]
+
+controls:
+  - random_sites
+  - rsa_only
+  - column_entropy
+  - gemme
+  - shuffled_sequence_esm
+  - cross_homolog_transfer
+  - literature_mutants
