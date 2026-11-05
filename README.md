@@ -266,13 +266,13 @@ _What worked, what did not, and how the filter should be weighted when used._
 
 ```
 mtrc-filter/
-  config/        pre-registered configs and surrogate list
-  data/          raw, msa, interim, processed (gitignored)
-  src/           numbering.py, config.py, pipeline modules
-  tests/         numbering and known-mutant checks
-  slurm/         batch scripts
-  notes/         handwritten/
-  reports/       figures/
+  config/   
+  data/   
+  src/    
+  tests/    
+  slurm/        
+  notes/         
+  reports/    
   logs/
 ```
 
