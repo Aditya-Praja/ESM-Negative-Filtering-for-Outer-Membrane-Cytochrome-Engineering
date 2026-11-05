@@ -1,6 +1,4 @@
-# ESM-Negative-Filtering-for-Outer-Membrane-Cytochrome-Engineering
-
-# mtrc-filter
+# Mtrc-Filter
 
 **A calibrated ESM-based negative filter for engineering the outer-membrane decaheme cytochrome MtrC.**
 
